@@ -1,8 +1,7 @@
-
 Name:       libSM
 Summary:    X.Org X11 libSM runtime library
 Version:    1.2.0
-Release:    1
+Release:    2.23
 Group:      System/Libraries
 License:    MIT
 URL:        http://www.x.org
@@ -35,8 +34,7 @@ The X.org X11 SM  development package.
 
 %build
 
-%reconfigure --disable-static \
-    --with-libuuid
+%reconfigure --disable-static --with-libuuid=no
 
 make %{?jobs:-j%jobs}
 
