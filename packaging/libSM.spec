@@ -6,6 +6,7 @@ Group:      System/Libraries
 License:    MIT
 URL:        http://www.x.org
 Source0:    http://xorg.freedesktop.org/releases/individual/lib/%{name}-%{version}.tar.gz
+Source1001: packaging/libSM.manifest 
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 BuildRequires:  pkgconfig(uuid)
@@ -33,6 +34,7 @@ The X.org X11 SM  development package.
 
 
 %build
+cp %{SOURCE1001} .
 
 %reconfigure --disable-static --with-libuuid=no
 
@@ -54,6 +56,7 @@ rm -rf %{buildroot}
 
 
 %files
+%manifest libSM.manifest
 %defattr(-,root,root,-)
 %doc AUTHORS COPYING README
 %{_libdir}/libSM.so.6
@@ -63,6 +66,7 @@ rm -rf %{buildroot}
 
 
 %files devel
+%manifest libSM.manifest
 %defattr(-,root,root,-)
 %dir %{_includedir}/X11/SM
 %{_includedir}/X11/SM/SM.h
