@@ -1,66 +1,65 @@
-Name:       libSM
-Summary:    X.Org X11 libSM runtime library
-Version:    1.2.0
-Release:    2.23
-Group:      System/Libraries
-License:    MIT
-URL:        http://www.x.org
-Source0:    http://xorg.freedesktop.org/releases/individual/lib/%{name}-%{version}.tar.gz
-Requires(post): /sbin/ldconfig
-Requires(postun): /sbin/ldconfig
-BuildRequires:  pkgconfig(uuid)
-BuildRequires:  pkgconfig(xtrans)
-BuildRequires:  pkgconfig(ice)
+Summary: X.Org X11 SM runtime library
+Name: libSM
+Version: 1.2.1
+Release: 1
+License: MIT
+Group: System Environment/Libraries
+URL: http://www.x.org
+
+Source0: %{name}-%{version}.tar.gz
+
+BuildRequires: pkgconfig
 BuildRequires:  pkgconfig(xproto)
 BuildRequires:  pkgconfig(xorg-macros)
-
+BuildRequires: xorg-x11-xtrans-devel >= 1.0.3-4
+BuildRequires: libICE-devel
+BuildRequires: libuuid-devel
 
 %description
-X11 Session Management library.
-
+The X.Org X11 SM (Session Management) runtime library.
 
 %package devel
-Summary:    X.Org X11 libSM development package
-Group:      Development/Libraries
-Requires:   %{name} = %{version}-%{release}
+Summary: X.Org X11 SM development package
+Group: Development/Libraries
+Requires: %{name} = %{version}-%{release}
+Requires: libICE-devel
 
 %description devel
-The X.org X11 SM  development package.
-
+The X.Org X11 SM (Session Management) development package.
 
 %prep
-%setup -q -n %{name}-%{version}
-
+%setup -q
 
 %build
 
-%reconfigure --disable-static --with-libuuid=no
-
+%reconfigure --with-libuuid --disable-static \
+           LDFLAGS="${LDFLAGS} -Wl,--hash-style=both -Wl,--as-needed"
 make %{?jobs:-j%jobs}
 
 %install
-rm -rf %{buildroot}
-%make_install
+rm -rf $RPM_BUILD_ROOT
 
+make install DESTDIR=$RPM_BUILD_ROOT
 
+# We intentionally don't ship *.la files
+rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 
+# we %%doc these ourselves, later, and only the text versions
+rm -rf $RPM_BUILD_ROOT%{_docdir}
+
+%remove_docs
+
+%clean
+rm -rf $RPM_BUILD_ROOT
 
 %post -p /sbin/ldconfig
-
 %postun -p /sbin/ldconfig
-
-
-
-
 
 %files
 %defattr(-,root,root,-)
-%doc AUTHORS COPYING README
+%doc AUTHORS COPYING ChangeLog
 %{_libdir}/libSM.so.6
-%{_libdir}/libSM.so.6.0.1
-%exclude /usr/share/doc/libSM/SMlib.xml
-%exclude /usr/share/doc/libSM/xsmp.xml
-
+%{_libdir}/libSM.so.6.*
 
 %files devel
 %defattr(-,root,root,-)
@@ -70,4 +69,3 @@ rm -rf %{buildroot}
 %{_includedir}/X11/SM/SMproto.h
 %{_libdir}/libSM.so
 %{_libdir}/pkgconfig/sm.pc
-
