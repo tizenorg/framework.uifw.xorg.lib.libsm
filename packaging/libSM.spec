@@ -71,4 +71,3 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/X11/SM/SMproto.h
 %{_libdir}/libSM.so
 %{_libdir}/pkgconfig/sm.pc
-
